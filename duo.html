@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two of Us — Personal Blog</title>
+<style>
+:root{
+  --bg:#EDF0F6;
+  --ink:#1A2133;
+  --muted:#5A6479;
+  --a:#2B54E0;
+  --a-soft:#DDE5FC;
+  --b:#D6336C;
+  --b-soft:#FADCE8;
+  --card:#FFFFFF;
+  --line:#CBD2E0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  line-height:1.6;
+  min-height:100%;
+}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+.hero{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:300px;
+  overflow:hidden;
+}
+.half{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:40px 32px;
+  color:#fff;
+}
+.half.a{background:var(--a);align-items:flex-start}
+.half.b{background:var(--b);align-items:flex-end;text-align:right}
+.half .who{font-size:15px;font-weight:600;opacity:.85}
+.half .name{
+  font-size:clamp(34px,7vw,74px);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.03em;
+  margin:6px 0 10px;
+  word-break:break-word;
+}
+.half .tag{max-width:30ch;font-size:16px;opacity:.92}
+.amp{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:76px;
+  height:76px;
+  border-radius:50%;
+  background:var(--ink);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font:italic 700 40px Georgia,serif;
+  border:5px solid var(--bg);
+}
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:var(--ink);
+  display:flex;
+  gap:4px;
+  padding:8px 12px;
+  overflow-x:auto;
+  justify-content:center;
+}
+nav button{
+  color:#C9D0E2;
+  padding:9px 16px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:15px;
+  white-space:nowrap;
+  transition:background .15s,color .15s;
+}
+nav button:hover{background:#2A3350;color:#fff}
+nav button[aria-selected="true"]{background:#fff;color:var(--ink)}
+
+main{max-width:1060px;margin:0 auto;padding:36px 20px 56px}
+.panel{display:none}
+.panel.on{display:block}
+h2{font-size:clamp(26px,4vw,36px);letter-spacing:-.02em;margin-bottom:6px}
+.lead{color:var(--muted);max-width:62ch;margin-bottom:26px}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.col{
+  background:var(--card);
+  border-radius:14px;
+  padding:22px 24px 24px;
+  border-top:7px solid var(--c);
+}
+.col.a{--c:var(--a);--soft:var(--a-soft)}
+.col.b{--c:var(--b);--soft:var(--b-soft)}
+.col h3{
+  font-size:19px;
+  color:var(--c);
+  margin-bottom:14px;
+}
+.col h4{font-size:15px;margin:16px 0 8px}
+.col p{margin-bottom:10px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  background:var(--soft);
+  color:var(--ink);
+  font-weight:600;
+  font-size:14px;
+  padding:6px 13px;
+  border-radius:999px;
+}
+.meter{margin-bottom:14px}
+.meter div.row{display:flex;justify-content:space-between;font-weight:600;font-size:15px;margin-bottom:5px}
+.meter .track{height:10px;border-radius:99px;background:var(--soft);overflow:hidden}
+.meter .fill{height:100%;background:var(--c);border-radius:99px;width:0;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+
+ul.plain{list-style:none}
+ul.plain li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid #E7EAF2}
+ul.plain li:last-child{border-bottom:0}
+ul.plain li::before{
+  position:absolute;
+  left:0;
+  top:8px;
+}
+ul.like li::before{content:"♥";color:var(--c)}
+ul.dislike li::before{content:"✕";color:var(--muted);font-weight:700}
+ul.hobby li::before{content:"★";color:var(--c)}
+
+dl.fav{display:grid;grid-template-columns:auto 1fr;gap:0 18px}
+dl.fav dt{font-weight:700;color:var(--c);padding:9px 0;border-bottom:1px solid #E7EAF2}
+dl.fav dd{padding:9px 0;border-bottom:1px solid #E7EAF2}
+dl.fav dt:last-of-type,dl.fav dd:last-of-type{border-bottom:0}
+
+blockquote{
+  background:var(--soft);
+  border-left:5px solid var(--c);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;
+  margin-bottom:14px;
+  font:italic 19px/1.5 Georgia,"Times New Roman",serif;
+}
+blockquote cite{
+  display:block;
+  margin-top:8px;
+  font:600 14px "Segoe UI",Arial,sans-serif;
+  color:var(--muted);
+}
+
+.together{
+  margin-top:20px;
+  background:var(--ink);
+  color:#fff;
+  border-radius:14px;
+  padding:22px 26px;
+}
+.together h3{margin-bottom:6px}
+.together p{color:#C9D0E2}
+
+footer{text-align:center;color:var(--muted);font-size:14px;padding:0 20px 30px}
+
+@media (max-width:720px){
+  .hero{grid-template-columns:1fr;min-height:0}
+  .half{padding:28px 22px 44px}
+  .half.b{align-items:flex-start;text-align:left;padding:44px 22px 28px}
+  .amp{width:60px;height:60px;font-size:32px}
+  .duo{grid-template-columns:1fr}
+  nav{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .meter .fill{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="half a">
+    <span class="who" id="a-role"></span>
+    <h1 class="name" id="a-name"></h1>
+    <p class="tag" id="a-tag"></p>
+  </div>
+  <div class="amp" aria-hidden="true">&amp;</div>
+  <div class="half b">
+    <span class="who" id="b-role"></span>
+    <h1 class="name" id="b-name"></h1>
+    <p class="tag" id="b-tag"></p>
+  </div>
+</header>
+
+<nav role="tablist" id="tabs"></nav>
+<main id="stage"></main>
+<footer id="foot"></footer>
+
+<script>
+const BLOG = {
+  title: "Our Blog",
+  footer: "Exercise 12 — Creating Web Pages · Misamis University",
+  people: {
+    a: {
+      name: "Name One",
+      role: "Blogger 1",
+      tagline: "Short line about me goes here.",
+      about: "Write two or three sentences introducing yourself: where you're from, what you study, and what you're about.",
+      skills: [
+        ["Skill one", 90],
+        ["Skill two", 80],
+        ["Skill three", 70],
+        ["Skill four", 60]
+      ],
+      likes: ["Something I like", "Another thing I like", "A third thing I like"],
+      dislikes: ["Something I dislike", "Another thing I dislike", "A third thing I dislike"],
+      hobbies: ["Hobby one", "Hobby two", "Hobby three"],
+      favorites: [
+        ["Food", "Your favorite food"],
+        ["Color", "Your favorite color"],
+        ["Movie", "Your favorite movie"],
+        ["Song", "Your favorite song"],
+        ["Game", "Your favorite game"]
+      ],
+      quotes: [
+        ["Your favorite quote goes here.", "Author"],
+        ["A Bible verse or another verse goes here.", "Book 1:1"]
+      ]
+    },
+    b: {
+      name: "Name Two",
+      role: "Blogger 2",
+      tagline: "Short line about me goes here.",
+      about: "Write two or three sentences introducing yourself: where you're from, what you study, and what you're about.",
+      skills: [
+        ["Skill one", 85],
+        ["Skill two", 75],
+        ["Skill three", 65],
+        ["Skill four", 55]
+      ],
+      likes: ["Something I like", "Another thing I like", "A third thing I like"],
+      dislikes: ["Something I dislike", "Another thing I dislike", "A third thing I dislike"],
+      hobbies: ["Hobby one", "Hobby two", "Hobby three"],
+      favorites: [
+        ["Food", "Your favorite food"],
+        ["Color", "Your favorite color"],
+        ["Movie", "Your favorite movie"],
+        ["Song", "Your favorite song"],
+        ["Game", "Your favorite game"]
+      ],
+      quotes: [
+        ["Your favorite quote goes here.", "Author"],
+        ["A Bible verse or another verse goes here.", "Book 1:1"]
+      ]
+    }
+  },
+  together: {
+    heading: "Why we made this together",
+    text: "Write one or two sentences about what you two have in common or how you worked on this exercise as a pair."
+  }
+};
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const P = BLOG.people;
+
+const SECTIONS = [
+  {
+    id: "home", label: "Home",
+    lead: "Meet the two of us.",
+    col: p => `<h3>About ${esc(p.name)}</h3><p>${esc(p.about)}</p>`,
+    extra: () => `<div class="together"><h3>${esc(BLOG.together.heading)}</h3><p>${esc(BLOG.together.text)}</p></div>`
+  },
+  {
+    id: "skills", label: "Skills",
+    lead: "What each of us is good at.",
+    col: p => `<h3>${esc(p.name)}'s skills</h3>` + p.skills.map(s =>
+      `<div class="meter"><div class="row"><span>${esc(s[0])}</span><span>${s[1]}%</span></div><div class="track"><div class="fill" data-w="${s[1]}"></div></div></div>`
+    ).join("")
+  },
+  {
+    id: "likes", label: "Likes & Dislikes",
+    lead: "The good, and the not so good.",
+    col: p => `<h3>${esc(p.name)}</h3><h4>Likes</h4><ul class="plain like">${p.likes.map(x => `<li>${esc(x)}</li>`).join("")}</ul><h4>Dislikes</h4><ul class="plain dislike">${p.dislikes.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`
+  },
+  {
+    id: "hobbies", label: "Hobbies",
+    lead: "What we do when we have free time.",
+    col: p => `<h3>${esc(p.name)}'s hobbies</h3><ul class="plain hobby">${p.hobbies.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`
+  },
+  {
+    id: "favorites", label: "Favorites",
+    lead: "Our top picks, side by side.",
+    col: p => `<h3>${esc(p.name)}'s favorites</h3><dl class="fav">${p.favorites.map(f => `<dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd>`).join("")}</dl>`
+  },
+  {
+    id: "quotes", label: "Quotes & Verses",
+    lead: "Words we live by.",
+    col: p => `<h3>${esc(p.name)}'s picks</h3>` + p.quotes.map(q => `<blockquote>“${esc(q[0])}”<cite>${esc(q[1])}</cite></blockquote>`).join("")
+  }
+];
+
+document.title = BLOG.title;
+["a", "b"].forEach(k => {
+  document.getElementById(k + "-name").textContent = P[k].name;
+  document.getElementById(k + "-role").textContent = P[k].role;
+  document.getElementById(k + "-tag").textContent = P[k].tagline;
+});
+document.getElementById("foot").textContent = BLOG.footer;
+
+const tabs = document.getElementById("tabs");
+const stage = document.getElementById("stage");
+
+SECTIONS.forEach((s, i) => {
+  const btn = document.createElement("button");
+  btn.role = "tab";
+  btn.textContent = s.label;
+  btn.dataset.id = s.id;
+  btn.setAttribute("aria-selected", i === 0);
+  btn.addEventListener("click", () => show(s.id));
+  tabs.appendChild(btn);
+
+  const sec = document.createElement("section");
+  sec.className = "panel" + (i === 0 ? " on" : "");
+  sec.id = "p-" + s.id;
+  sec.innerHTML = `<h2>${esc(s.label)}</h2><p class="lead">${esc(s.lead)}</p><div class="duo"><div class="col a">${s.col(P.a)}</div><div class="col b">${s.col(P.b)}</div></div>${s.extra ? s.extra() : ""}`;
+  stage.appendChild(sec);
+});
+
+function fillMeters(panel){
+  panel.querySelectorAll(".fill").forEach(f => {
+    f.style.width = "0";
+    requestAnimationFrame(() => requestAnimationFrame(() => { f.style.width = f.dataset.w + "%"; }));
+  });
+}
+
+function show(id){
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + id));
+  tabs.querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.id === id));
+  fillMeters(document.getElementById("p-" + id));
+}
+</script>
+</body>
+</html>
